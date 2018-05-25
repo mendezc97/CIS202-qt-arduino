@@ -7,7 +7,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    m_console(new Console(this))
+    m_console(new Console(this)),
+    banimate(new BallAnimation(this))
 {
     button[0] = new QPushButton("LED 1",this);
     button[0]->setCheckable(true);
@@ -15,14 +16,16 @@ MainWindow::MainWindow(QWidget *parent) :
     label[0]->move(button[0]->pos()+QPoint(button[0]->width()+5,0));
     m_console->move(button[0]->pos()+QPoint(0,button[0]->height()+5));
     m_console->setEnabled(true);
+
     connect(button[0],SIGNAL(toggled(bool)),this,SLOT(onbutton1Press(bool)));
     m_led_state[0] = 0;
     m_led_state[1] = 0;
     m_led_state[2] = 0;
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(readData()));
-    timer->start(1000);
-    setFixedSize(800,600);
+    timer->start(50);//Timer, 50 is good
+    banimate->move(QPoint(150,150));//Position of the widget
+    setFixedSize(800,600); //window size
 }
 
 MainWindow::~MainWindow()
@@ -65,9 +68,13 @@ void MainWindow::toggle_it(bool toggled,int button,int led_pin)
 
 void MainWindow::readData()
 {
-    //const QByteArray data = m_serial->readAll();
-    m_buffer = QString("%1" ).arg( QDateTime::currentDateTime().toTime_t() );
-    processMessage(m_buffer);
+    static int count=0;
+    //const QByteArray data = m_serial->readAll();'
+    banimate->addToOrigin(QPoint(-1,-1));
+    banimate->check();
+    banimate->repaint();
+    processMessage(QString("%1").arg(count).arg(QDateTime::currentDateTime().toTime_t()));
+    count++;
     m_buffer = "";
 }
 
