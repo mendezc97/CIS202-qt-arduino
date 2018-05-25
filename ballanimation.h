@@ -10,6 +10,7 @@ public:
     explicit BallAnimation(QWidget *parent = nullptr);
     void setOrigin(const QPoint &origin);
     void addToOrigin(const QPoint &point);
+    void check();
 
 
 signals:
@@ -19,6 +20,12 @@ public slots:
 
 private:
         QPoint m_origin;
+        int circlew;
+        int circleh;
+        int edgew;
+        int edgeh;
+        bool minx = true;
+
 
 };
 

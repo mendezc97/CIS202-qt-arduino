@@ -23,9 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_led_state[2] = 0;
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(readData()));
-    timer->start(1000);
-    banimate->move(QPoint(150,150));
-    //setFixedSize(800,600); //window size
+    timer->start(50);//Timer, 50 is good
+    banimate->move(QPoint(150,150));//Position of the widget
+    setFixedSize(800,600); //window size
 }
 
 MainWindow::~MainWindow()
@@ -69,10 +69,11 @@ void MainWindow::toggle_it(bool toggled,int button,int led_pin)
 void MainWindow::readData()
 {
     static int count=0;
-    //const QByteArray data = m_serial->readAll();
-    banimate->addToOrigin(QPoint(1,1));
+    //const QByteArray data = m_serial->readAll();'
+    banimate->addToOrigin(QPoint(-1,-1));
+    banimate->check();
     banimate->repaint();
-    processMessage(QString("%1 %2" ).arg(count).arg(QDateTime::currentDateTime().toTime_t()));
+    processMessage(QString("%1").arg(count).arg(QDateTime::currentDateTime().toTime_t()));
     count++;
     m_buffer = "";
 }
